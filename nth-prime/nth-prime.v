@@ -2,33 +2,44 @@ module main
 
 import math
 
-fn is_prime(num int, mut primes []int) bool {
+fn is_prime(num int) bool {
 	limit := math.sqrti(num) + 1
-	for p in primes {
-		if p > limit {
-			break
-		}
+	if num % 2 == 0 {
+		return num == 2
+	}
+	mut p := 3
+	for p < limit {
 		if num % p == 0 {
 			return false
 		}
+		p += 2
 	}
 	return true
 }
 
 fn nth_prime(n int) !int {
-	if n <= 0 {
-		return error('n must be greater than 0')
-	}
-	mut res := []int{cap: n + 1}
-	res << [2, 3, 5, 7]
-	mut p := 11
-	mut l := 4
-	for l < n {
-		if is_prime(p, mut res) {
-			res << p
-			l++
+	match true {
+		n <= 0 {
+			return error('n must be greater than 0')
 		}
-		p += 2
+		n == 1 {
+			return 2
+		}
+		n == 2 {
+			return 3
+		}
+		else {
+			mut res := 0
+			mut p := 3
+			mut l := 1
+			for l < n {
+				if is_prime(p) {
+					res = p
+					l++
+				}
+				p += 2
+			}
+			return res
+		}
 	}
-	return res[n - 1]
 }
